@@ -8,6 +8,8 @@ For smaller use cases, Sightengine's free tier will be adequate, permitting 100 
 
 Click on the post context menu for any post and choose "Check image for AI Content". If the post is an image post, it will be checked against SightEngine's API key and the likelihood of the post being AI generated will be shown as a popup.
 
+[Example video of usage](https://www.youtube.com/shorts/iArySZaY1oE).
+
 ## About this app
 
 This app is open source under the BSD 3-Clause licence. The source code can be found [here](https://github.com/fsvreddit/image-moderator).

@@ -7,7 +7,7 @@ export enum AppSetting {
 export const appSettings: SettingsFormField[] = [
     {
         type: "group",
-        label: "SightEngine API Settings",
+        label: "Sightengine API Settings",
         fields: [
             {
                 type: "string",

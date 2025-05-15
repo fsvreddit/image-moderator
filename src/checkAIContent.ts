@@ -3,6 +3,7 @@ import { isLinkId } from "@devvit/shared-types/tid.js";
 import { getAPIUserAndKey } from "./apiKeyManagement.js";
 import { DateTime } from "luxon";
 import { getImageURLFromPost } from "./utility.js";
+import { SightengineResponse } from "./types.js";
 
 export async function checkPostForAIContent (event: MenuItemOnPressEvent, context: Context) {
     const postId = event.targetId;
@@ -27,10 +28,9 @@ export async function checkPostForAIContent (event: MenuItemOnPressEvent, contex
     const cachedResultKey = `sightengine_ai_check_${event.targetId}`;
     const cachedResult = await context.redis.get(cachedResultKey);
 
-    let result = undefined;
+    let result: SightengineResponse | undefined;
     if (cachedResult) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        result = JSON.parse(cachedResult);
+        result = JSON.parse(cachedResult) as SightengineResponse;
         console.log("Using cached result");
     }
 
@@ -56,14 +56,12 @@ export async function checkPostForAIContent (event: MenuItemOnPressEvent, contex
             return;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        result = await response.json();
+        result = await response.json() as SightengineResponse;
         await context.redis.set(cachedResultKey, JSON.stringify(result), { expiration: DateTime.now().plus({ weeks: 1 }).toJSDate() });
     }
 
     console.log(result);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const aiLikelihood = result.type.ai_generated as number | undefined;
+    const aiLikelihood = result.type.ai_generated;
     if (!aiLikelihood) {
         context.ui.showToast("Could not determine AI content likelihood.");
         return;
