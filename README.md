@@ -10,6 +10,8 @@ Click on the post context menu for any post and choose "Check image for AI Conte
 
 [Example video of usage](https://www.youtube.com/shorts/iArySZaY1oE).
 
+If this is run on a gallery submission, the first image on the gallery will be checked.
+
 ## About this app
 
 This app is open source under the BSD 3-Clause licence. The source code can be found [here](https://github.com/fsvreddit/image-moderator).
