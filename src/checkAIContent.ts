@@ -58,7 +58,7 @@ export async function checkPostForAIContent (event: MenuItemOnPressEvent, contex
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         result = await response.json();
-        await context.redis.set(cachedResultKey, JSON.stringify(result), { expiration: DateTime.now().plus({ hours: 1 }).toJSDate() });
+        await context.redis.set(cachedResultKey, JSON.stringify(result), { expiration: DateTime.now().plus({ weeks: 1 }).toJSDate() });
     }
 
     console.log(result);
