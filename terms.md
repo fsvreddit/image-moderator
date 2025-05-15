@@ -13,4 +13,4 @@ Data on Reddit falls under the [Reddit Privacy Policy](https://www.reddit.com/po
 
 Reddit users are governed by the [Reddit User Agreement](https://www.redditinc.com/policies/user-agreement). [Discord](https://discord.com/terms) users are governed by their respective terms of service. Use of Sightengine's API is governed by Sightengline's [Terms of Service](https://sightengine.com/policies/terms).
 
-This app is provided without any warranty or guarantees.
+This app is provided without any warranty or guarantees, and is not affiliated with Sightengine.
