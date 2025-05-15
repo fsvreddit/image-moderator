@@ -1,23 +1,8 @@
-import { MenuItemOnPressEvent, Context, Post } from "@devvit/public-api";
+import { MenuItemOnPressEvent, Context } from "@devvit/public-api";
 import { isLinkId } from "@devvit/shared-types/tid.js";
 import { getAPIUserAndKey } from "./apiKeyManagement.js";
 import { DateTime } from "luxon";
-import { domainFromUrl } from "./utility.js";
-
-function urlFromPost (post: Post): string | undefined {
-    const domain = domainFromUrl(post.url);
-    if (domain === "i.redd.it" || domain === "i.imgur.com") {
-        // Reddit internal link or Imgur link
-        return post.url;
-    }
-
-    if (post.url.startsWith("https://www.reddit.com/gallery/")) {
-        const gallery = post.gallery;
-        if (gallery.length > 0) {
-            return gallery[0].url;
-        }
-    }
-}
+import { getImageURLFromPost } from "./utility.js";
 
 export async function checkPostForAIContent (event: MenuItemOnPressEvent, context: Context) {
     const postId = event.targetId;
@@ -38,9 +23,6 @@ export async function checkPostForAIContent (event: MenuItemOnPressEvent, contex
     }
 
     const post = await context.reddit.getPostById(postId);
-    // console.log(JSON.stringify(post, null, 2));
-    // console.log(urlFromPost(post));
-    // return;
 
     const cachedResultKey = `sightengine_ai_check_${event.targetId}`;
     const cachedResult = await context.redis.get(cachedResultKey);
@@ -52,13 +34,13 @@ export async function checkPostForAIContent (event: MenuItemOnPressEvent, contex
         console.log("Using cached result");
     }
 
-    const url = urlFromPost(post);
-    if (!url) {
-        context.ui.showToast("Cannot check post for AI content. This may not be an image post.");
-        return;
-    }
-
     if (!result) {
+        const url = getImageURLFromPost(post);
+        if (!url) {
+            context.ui.showToast("Cannot check post for AI content. This may not be an image post.");
+            return;
+        }
+
         const params = new URLSearchParams();
         params.append("url", url);
         params.append("models", "genai");
