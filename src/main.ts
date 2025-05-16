@@ -29,6 +29,7 @@ Devvit.addMenuItem({
 Devvit.addMenuItem({
     location: "post",
     label: "Check image for AI Content",
+    forUserType: "moderator",
     onPress: checkPostForAIContent,
 });
 
