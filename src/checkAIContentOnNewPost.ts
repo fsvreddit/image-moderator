@@ -69,7 +69,7 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
 
     const thresholdToReport = settings[AppSetting.ThresholdToReport] as number | undefined;
     if (thresholdToReport && aiLikelihood < thresholdToReport) {
-        console.log(`${source}: AI content likelihood (${aiLikelihood}%) is below threshold (${thresholdToReport}%). Skipping report.`);
+        console.log(`${source}: AI content likelihood for ${post.id} (${aiLikelihood}%) is below threshold (${thresholdToReport}%). Skipping report.`);
         return;
     }
 
