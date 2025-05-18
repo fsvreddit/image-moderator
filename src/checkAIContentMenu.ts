@@ -29,4 +29,5 @@ export async function checkPostForAIContent (event: MenuItemOnPressEvent, contex
     }
 
     context.ui.showToast(`AI content likelihood: ${aiLikelihood}%`);
+    console.log(`Active Check: Post ${postId} AI likelihood ${aiLikelihood}%.`);
 }
