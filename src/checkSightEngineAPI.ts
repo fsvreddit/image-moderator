@@ -75,6 +75,11 @@ export async function getSightengineResults (post: Post, context: TriggerContext
     }
 
     const result = await response.json() as SightengineResponse;
+    if (result.status !== "success") {
+        console.log("Sightengine API error:", result);
+        return getFailureResponse("Error checking post for AI content.");
+    }
+
     await context.redis.set(cachedResultKey, JSON.stringify(result), { expiration: DateTime.now().plus({ months: 1 }).toJSDate() });
 
     return result;
