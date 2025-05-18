@@ -20,6 +20,12 @@ You can also set the app up to proactively check new posts, or posts approved ou
 
 Consider setting a suitable account age and karma threshold to restrict this feature to accounts who are more likely to break rules.
 
+## Change History
+
+### v1.0
+
+* Initial Release
+
 ## About this app
 
 This app is open source under the BSD 3-Clause licence. The source code can be found [here](https://github.com/fsvreddit/image-moderator).
