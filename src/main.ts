@@ -1,7 +1,8 @@
 import { Devvit } from "@devvit/public-api";
 import { appSettings } from "./settings.js";
 import { setAPIKeyFormHandler } from "./apiKeyManagement.js";
-import { checkPostForAIContent } from "./checkAIContent.js";
+import { checkPostForAIContent } from "./checkAIContentMenu.js";
+import { handlePostApprovalAction, handlePostCreate } from "./checkAIContentOnNewPost.js";
 
 Devvit.addSettings(appSettings);
 
@@ -31,6 +32,16 @@ Devvit.addMenuItem({
     label: "Check image for AI Content",
     forUserType: "moderator",
     onPress: checkPostForAIContent,
+});
+
+Devvit.addTrigger({
+    event: "PostCreate",
+    onEvent: handlePostCreate,
+});
+
+Devvit.addTrigger({
+    event: "ModAction",
+    onEvent: handlePostApprovalAction,
 });
 
 Devvit.configure({

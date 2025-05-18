@@ -26,3 +26,8 @@ export function getImageURLFromPost (post: Post): string | undefined {
         }
     }
 }
+
+export function postIsImage (post: Post): boolean {
+    const url = getImageURLFromPost(post);
+    return url !== undefined;
+}
