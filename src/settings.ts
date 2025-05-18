@@ -29,6 +29,7 @@ export const appSettings: SettingsFormField[] = [
     {
         type: "group",
         label: "Detect content in newly created posts",
+        helpText: "Warning: you should be mindful of API usage, and set account age and karma thresholds to keep usage low.",
         fields: [
             {
                 type: "boolean",
