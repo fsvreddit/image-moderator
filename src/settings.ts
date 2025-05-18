@@ -82,8 +82,8 @@ export const appSettings: SettingsFormField[] = [
                     if (!value) {
                         return;
                     }
-                    if (value < 0 || value > 100) {
-                        return "Value must be between 0 and 100.";
+                    if (value < 0 || value > 99) {
+                        return "Value must be between 0 and 99.";
                     }
                 },
             },
