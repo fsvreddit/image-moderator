@@ -20,4 +20,4 @@ You can also set the app up to proactively check new posts, or posts approved ou
 
 This app is open source under the BSD 3-Clause licence. The source code can be found [here](https://github.com/fsvreddit/image-moderator).
 
-Interested in detections for other things? Get in touch by messaging /u/fsv! The list of possibilities can be seen in Sightengine's documentation [here](https://sightengine.com/docs/models).
+Interested in detections for things other than AI? Get in touch by messaging /u/fsv! The list of possibilities can be seen in Sightengine's documentation [here](https://sightengine.com/docs/models).
