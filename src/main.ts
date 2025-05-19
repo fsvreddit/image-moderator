@@ -3,6 +3,8 @@ import { appSettings } from "./settings.js";
 import { setAPIKeyFormHandler } from "./apiKeyManagement.js";
 import { checkPostForAIContent } from "./checkAIContentMenu.js";
 import { handlePostApprovalAction, handlePostCreate } from "./checkAIContentOnNewPost.js";
+import { handleModListChanges } from "./moderatorChecks.js";
+import { handleAppInstallOrUpgrade } from "./installActions.js";
 
 Devvit.addSettings(appSettings);
 
@@ -40,8 +42,18 @@ Devvit.addTrigger({
 });
 
 Devvit.addTrigger({
+    events: ["AppInstall", "AppUpgrade"],
+    onEvent: handleAppInstallOrUpgrade,
+});
+
+Devvit.addTrigger({
     event: "ModAction",
     onEvent: handlePostApprovalAction,
+});
+
+Devvit.addTrigger({
+    event: "ModAction",
+    onEvent: handleModListChanges,
 });
 
 Devvit.configure({

@@ -18,7 +18,7 @@ If this is run on a gallery submission, the first image on the gallery will be c
 
 You can also set the app up to proactively check new posts, or posts approved out of the modqueue. However, this can use a lot of API resource, particularly on busier subreddits.
 
-Consider setting a suitable account age and karma threshold to restrict this feature to accounts who are more likely to break rules.
+Consider setting a suitable account age and karma threshold to restrict this feature to accounts who are more likely to break rules. Posts from moderators will never be checked, and by default content from approved users will not be checked (but this can be changed).
 
 If an image is detected as AI, a report like this will be made:
 

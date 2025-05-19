@@ -4,6 +4,7 @@ import { getSightengineResults } from "./checkSightEngineAPI.js";
 import { postIsImage } from "./utility.js";
 import { AppSetting } from "./settings.js";
 import { DateTime } from "luxon";
+import { userIsModerator } from "./moderatorChecks.js";
 
 function getFilterKeyForPost (postId: string) {
     return `filtered_post:${postId}`;
@@ -65,6 +66,10 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
             console.log(`${source}: User ${user.username} is an approved user. Skipping AI check.`);
             return;
         }
+    }
+
+    if (await userIsModerator(user.username, context)) {
+        console.log(`${source}: User ${user.username} is a moderator. Skipping AI check.`);
     }
 
     const result = await getSightengineResults(post, context);
