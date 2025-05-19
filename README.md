@@ -20,6 +20,10 @@ You can also set the app up to proactively check new posts, or posts approved ou
 
 Consider setting a suitable account age and karma threshold to restrict this feature to accounts who are more likely to break rules.
 
+If an image is detected as AI, a report like this will be made:
+
+![screenshot](https://github.com/fsvreddit/image-moderator/blob/main/doc_images/screenshot.png?raw=true)
+
 ## Change History
 
 ### v1.0
