@@ -36,21 +36,34 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
         return;
     }
 
-    const maxAccountAgeInMonths = settings[AppSetting.MaxAgeInMonths] as number | undefined;
-    if (maxAccountAgeInMonths && DateTime.fromJSDate(user.createdAt) < DateTime.now().minus({ months: maxAccountAgeInMonths })) {
-        console.log(`${source}: User ${user.username} is older than ${maxAccountAgeInMonths} month(s). Skipping AI check.`);
+    const ignoreApprovedUsers = settings[AppSetting.IgnoreApprovedUsers] as boolean | undefined;
+    if (ignoreApprovedUsers) {
+        const approvedUsers = await context.reddit.getApprovedUsers({
+            subredditName: context.subredditName ?? await context.reddit.getCurrentSubredditName(),
+            username: user.username,
+        }).all();
+
+        if (approvedUsers.length > 0) {
+            console.log(`${source}: User ${user.username} is an approved user. Skipping AI check.`);
+            return;
+        }
+    }
+
+    const maxAccountAgeInWeeks = settings[AppSetting.MaxAgeInWeeks] as number | undefined;
+    if (maxAccountAgeInWeeks && DateTime.fromJSDate(user.createdAt) < DateTime.now().minus({ weeks: maxAccountAgeInWeeks })) {
+        console.log(`${source}: User ${user.username} is older than ${maxAccountAgeInWeeks} weeks(s). Skipping AI check.`);
         return;
     }
 
     const maxLinkKarma = settings[AppSetting.MaxLinkKarma] as number | undefined;
     if (maxLinkKarma && user.linkKarma > maxLinkKarma) {
-        console.log(`${source}: User ${user.username} has link karma greater than ${maxLinkKarma}. Skipping AI check.`);
+        console.log(`${source}: User ${user.username} has link karma ${user.linkKarma}, threshold ${maxLinkKarma}. Skipping AI check.`);
         return;
     }
 
     const maxCommentKarma = settings[AppSetting.MaxCommentKarma] as number | undefined;
     if (maxCommentKarma && user.commentKarma > maxCommentKarma) {
-        console.log(`${source}: User ${user.username} has comment karma greater than ${maxCommentKarma}. Skipping AI check.`);
+        console.log(`${source}: User ${user.username} has comment karma ${user.commentKarma}, threshold ${maxCommentKarma}. Skipping AI check.`);
         return;
     }
 
