@@ -24,7 +24,7 @@ export async function userIsModerator (username: string, context: TriggerContext
 
 export async function handleModListChanges (event: ModAction, context: TriggerContext): Promise<void> {
     const modChangeActions = ["addmoderator", "acceptmoderatorinvite", "invitemoderator", "removemoderator"];
-    if (event.action && !modChangeActions.includes(event.action)) {
+    if (event.action && modChangeActions.includes(event.action)) {
         await context.redis.del(MODERATOR_STORE_KEY);
     }
 }
