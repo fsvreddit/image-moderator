@@ -108,7 +108,7 @@ export async function handlePostCreate (event: PostCreate, context: TriggerConte
     }
 
     if (settings[AppSetting.CheckAfterApproval] && event.post.spam) {
-        console.log(`PostCreate: Post ${event.post.id} is marked as spam. Skipping AI check.`);
+        console.log(`PostCreate: Post ${event.post.id} is removed or filtered. Skipping AI check.`);
         await context.redis.set(getFilterKeyForPost(event.post.id), "true", { expiration: DateTime.now().plus({ weeks: 1 }).toJSDate() });
         return;
     }
