@@ -26,5 +26,6 @@ export async function handleModListChanges (event: ModAction, context: TriggerCo
     const modChangeActions = ["addmoderator", "acceptmoderatorinvite", "invitemoderator", "removemoderator"];
     if (event.action && !modChangeActions.includes(event.action)) {
         await context.redis.del(MODERATOR_STORE_KEY);
+        console.log("Cleared cached moderator list due to action:", event.action);
     }
 }
