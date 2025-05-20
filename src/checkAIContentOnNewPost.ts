@@ -39,7 +39,7 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
 
     const maxAccountAgeInWeeks = settings[AppSetting.MaxAgeInWeeks] as number | undefined;
     if (maxAccountAgeInWeeks && DateTime.fromJSDate(user.createdAt) < DateTime.now().minus({ weeks: maxAccountAgeInWeeks })) {
-        console.log(`${source}: User ${user.username} is older than ${maxAccountAgeInWeeks} weeks(s). Skipping AI check.`);
+        console.log(`${source}: User ${user.username} is older than ${maxAccountAgeInWeeks} week(s). Skipping AI check.`);
         return;
     }
 

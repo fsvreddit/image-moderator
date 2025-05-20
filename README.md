@@ -1,10 +1,10 @@
 A Dev Platform app for detecting AI content in images.
 
-This app uses the Sightengine API to analyse image posts for AI content. 
+This app uses the Sightengine API to analyse image posts for AI content.
 
 To use, you need to sign up to [Sightengine's platform](https://sightengine.com/) and obtain an API user ID and key. You must set the API User in the app settings, and the API key via the subreddit context menu.
 
-For smaller use cases, Sightengine's free tier will be adequate, permitting 100 AI detections per day up to 400/month. For higher usage needs, Sightengine offer paid plans.
+For many use cases, Sightengine's free tier will be adequate, permitting 100 AI detections per day up to 400/month. For higher usage needs, Sightengine offer paid plans.
 
 ## Checking images
 
