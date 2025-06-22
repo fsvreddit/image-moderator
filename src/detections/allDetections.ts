@@ -8,6 +8,7 @@ import { DetectOffensiveContent } from "./DetectOffensiveContent.js";
 import { DetectQRCodeSpam } from "./DetectQRCodes.js";
 import { DetectTextSpam } from "./DetectTextSpam.js";
 import { DetectDrugs } from "./DetectDrugs.js";
+import { DetectImageType } from "./DetectImageType.js";
 
 export const ALL_DETECTIONS: (new (settings: SettingsValues) => DetectionBase)[] = [
     DetectGenAI,
@@ -18,6 +19,7 @@ export const ALL_DETECTIONS: (new (settings: SettingsValues) => DetectionBase)[]
     DetectQRCodeSpam,
     DetectTextSpam,
     DetectDrugs,
+    DetectImageType,
 ];
 
 export function getModels (detectors: (new (settings: SettingsValues) => DetectionBase)[]): string[] {

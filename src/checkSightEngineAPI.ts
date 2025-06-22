@@ -28,6 +28,8 @@ export interface SightengineResponse {
             ideogram?: number;
         };
         deepfake?: number;
+        illustration?: number;
+        photo?: number;
     };
     quality?: {
         score?: number;
