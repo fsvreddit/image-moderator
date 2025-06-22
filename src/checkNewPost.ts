@@ -73,7 +73,7 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
         console.log(`${source}: User ${user.username} is a moderator. Skipping AI check.`);
     }
 
-    const detectors = getRelevantDetectors(settings, "menu");
+    const detectors = getRelevantDetectors(settings, "proactive");
 
     if (detectors.length === 0) {
         return;
@@ -90,7 +90,7 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
     const detectionResults: string[] = [];
     for (const Detection of detectors) {
         const detectionInstance = new Detection(settings);
-        const detectionResult = detectionInstance.detectByMenu(result);
+        const detectionResult = detectionInstance.detectProactive(result);
         if (detectionResult) {
             detectionResults.push(detectionResult);
         }
