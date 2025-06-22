@@ -9,16 +9,17 @@ enum ModuleSetting {
 export class DetectDeepfake extends DetectionBase {
     public name = "Deepfake";
     public friendlyName = "Deepfake Detection";
+    public helpText = "Detects images that are likely to be deepfakes.";
     public sightengineType = "deepfake";
 
-    override defaultEnabledForMenu = true;
+    override defaultEnabledForMenu = false;
 
     override moduleSettings: SettingsFormField[] = [
         {
             type: "number",
             label: "Threshold to report",
             name: ModuleSetting.Threshold,
-            helpText: "App will report the post if the AI content likelihood is greater than this percentage.",
+            helpText: "App will report the post if the deepfake likelihood is greater than this percentage.",
             defaultValue: 80,
             onValidate: ({ value }) => {
                 if (!value) {
@@ -46,16 +47,16 @@ export class DetectDeepfake extends DetectionBase {
         }
 
         if (deepfakeLikelihood > this.getSetting<number>(ModuleSetting.Threshold, 80)) {
-            return `Deepfake Likelihood: ${deepfakeLikelihood}%.`;
+            return `Deepfake Likelihood: ${deepfakeLikelihood}%`;
         }
     }
 
-    public detectByMenu (sightEngineResponse: SightengineResponse): string {
+    public detectByMenu (sightEngineResponse: SightengineResponse): string | undefined {
         const deepfakeLikelihood = this.getDeepfakeLikelihood(sightEngineResponse);
-        if (!deepfakeLikelihood) {
-            return "Error checking image.";
+        if (deepfakeLikelihood === undefined) {
+            return;
         }
 
-        return `Deepfake Likelihood: ${deepfakeLikelihood}%.`;
+        return `Deepfake Likelihood: ${deepfakeLikelihood}%`;
     }
 }

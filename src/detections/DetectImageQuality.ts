@@ -9,6 +9,7 @@ enum ModuleSetting {
 export class DetectImageQuality extends DetectionBase {
     public name = "ImageQuality";
     public friendlyName = "Image Quality Detection";
+    public helpText = "Detects low quality or blurry images. Useful for identifying posts with poor image quality.";
     public sightengineType = "quality";
 
     public moduleSettings: SettingsFormField[] = [
@@ -16,24 +17,33 @@ export class DetectImageQuality extends DetectionBase {
             type: "number",
             name: ModuleSetting.QualityThreshold,
             label: "Quality Threshold",
-            defaultValue: 0.5,
-            helpText: "Threshold for image quality detection (0 to 1). Less than 0.5 is likely to be a low quality, blurry image.",
+            defaultValue: 50,
+            helpText: "Threshold for image quality detection (0 to 100). Less than 50% is likely to be a low quality, blurry image.",
+            onValidate: event => this.validatePercentage(event),
         },
     ];
 
     override defaultEnabledForMenu = false;
 
+    private getQualityScore (sightEngineResponse: SightengineResponse): number | undefined {
+        if (sightEngineResponse.quality?.score === undefined) {
+            return;
+        };
+
+        return Math.round(sightEngineResponse.quality.score * 100);
+    }
+
     public detectProactive (sightEngineResponse: SightengineResponse): string | undefined {
-        const quality = sightEngineResponse.quality?.score;
-        if (quality && quality < this.getSetting("quality_threshold", 0.5)) {
+        const quality = this.getQualityScore(sightEngineResponse);
+        if (quality && quality < this.getSetting(ModuleSetting.QualityThreshold, 50)) {
             return `Image quality is low (${quality}).`;
         }
         return undefined;
     }
 
-    public detectByMenu (sightEngineResponse: SightengineResponse): string {
-        const quality = sightEngineResponse.quality?.score;
-        if (quality && quality < this.getSetting("quality_threshold", 0.5)) {
+    public detectByMenu (sightEngineResponse: SightengineResponse): string | undefined {
+        const quality = this.getQualityScore(sightEngineResponse);
+        if (quality && quality < this.getSetting(ModuleSetting.QualityThreshold, 50)) {
             return `Image quality is low (${quality}).`;
         }
         return "Image quality is acceptable.";

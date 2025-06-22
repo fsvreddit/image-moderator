@@ -32,6 +32,80 @@ export interface SightengineResponse {
     quality?: {
         score?: number;
     };
+    faces?: [
+        {
+            x1?: number;
+            y1?: number;
+            x2?: number;
+            y2?: number;
+            features?: {
+                left_eye?: {
+                    x: number;
+                    y: number;
+                };
+                right_eye?: {
+                    x: number;
+                    y: number;
+                };
+                nose_tip?: {
+                    x: number;
+                    y: number;
+                };
+                left_mouth_corner?: {
+                    x: number;
+                    y: number;
+                };
+                right_mouth_corner?: {
+                    x: number;
+                    y: number;
+                };
+            };
+            attributes?: {
+                minor?: number;
+                sunglasses?: number;
+            };
+        },
+    ];
+    offensive?: {
+        nazi?: number;
+        confederate?: number;
+        supremacist?: number;
+        terrorist?: number;
+    };
+    qr?: {
+        personal: [];
+        link: {
+            type: string;
+            match: string;
+            category?: string;
+        }[];
+        social: {
+            type: string;
+            match: string;
+            score?: number;
+        }[];
+        profanity: [];
+        spam: {
+            type: string;
+            match: string;
+        }[];
+    };
+    text?: {
+        spam: {
+            type: string;
+            match: string;
+        }[];
+    };
+    recreational_drug?: {
+        prob?: number;
+        classes?: {
+            cannabis: number;
+            cannabis_logo_only: number;
+            cannabis_plant: number;
+            cannabis_drug: number;
+            recreational_drugs_not_cannabis: number;
+        };
+    };
 }
 
 interface SightengineResponseWrapped {

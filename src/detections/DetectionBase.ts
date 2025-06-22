@@ -1,9 +1,10 @@
-import { SettingsFormField, SettingsFormFieldGroup, SettingsValues } from "@devvit/public-api";
+import { SettingsFormField, SettingsFormFieldGroup, SettingsFormFieldValidatorEvent, SettingsValues } from "@devvit/public-api";
 import { SightengineResponse } from "../checkSightEngineAPI.js";
 
 export abstract class DetectionBase {
     public abstract name: string;
     public abstract friendlyName: string;
+    public abstract helpText: string;
     public abstract sightengineType: string;
 
     abstract moduleSettings: SettingsFormField[];
@@ -37,7 +38,8 @@ export abstract class DetectionBase {
 
         return {
             type: "group",
-            label: `Settings for ${this.friendlyName} detection`,
+            label: `Settings for ${this.friendlyName}`,
+            helpText: this.helpText,
             fields: settings,
         };
     }
@@ -50,10 +52,20 @@ export abstract class DetectionBase {
         return this.settings[`${this.name}_EnabledForMenu`] as boolean | undefined ?? this.defaultEnabledForMenu;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    protected validatePercentage (event: SettingsFormFieldValidatorEvent<number>): void | string {
+        if (event.value === undefined) {
+            return;
+        }
+        if (event.value < 0 || event.value > 100) {
+            return "Value must be between 0 and 100.";
+        }
+    }
+
     protected getSetting<T> (name: string, defaultValue: T): T {
         return this.settings[name] as T | undefined ?? defaultValue;
     }
 
     public abstract detectProactive (sightEngineResponse: SightengineResponse): string | undefined;
-    public abstract detectByMenu (sightEngineResponse: SightengineResponse): string;
+    public abstract detectByMenu (sightEngineResponse: SightengineResponse): string | undefined;
 }

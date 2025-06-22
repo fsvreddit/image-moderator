@@ -5,7 +5,6 @@ export enum AppSetting {
     APIUser = "apiUser",
 
     // Automatic check settings
-    AutoCheckEnabled = "autoCheckEnabled",
     CheckAfterApproval = "checkAfterApproval",
     IgnoreApprovedUsers = "ignoreApprovedUsers",
     MaxAgeInWeeks = "maxAgeInWeeks",
@@ -31,13 +30,6 @@ const appSettings: SettingsFormField[] = [
         label: "Detect content in newly created posts",
         helpText: "Warning: you should be mindful of API usage, and set account age and karma thresholds to keep usage low.",
         fields: [
-            {
-                type: "boolean",
-                label: "Enable automatic check",
-                name: AppSetting.AutoCheckEnabled,
-                helpText: "If enabled, newly created posts will be checked and a report will be made if the image is detected as AI.",
-                defaultValue: false,
-            },
             {
                 type: "boolean",
                 label: "Check after approval",
