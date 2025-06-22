@@ -1,19 +1,18 @@
 import { SettingsFormField } from "@devvit/public-api";
+import { ALL_DETECTIONS } from "./detections/allDetections.js";
 
 export enum AppSetting {
     APIUser = "apiUser",
 
     // Automatic check settings
-    AutoCheckEnabled = "autoCheckEnabled",
     CheckAfterApproval = "checkAfterApproval",
     IgnoreApprovedUsers = "ignoreApprovedUsers",
     MaxAgeInWeeks = "maxAgeInWeeks",
     MaxLinkKarma = "maxLinkKarma",
     MaxCommentKarma = "maxCommentKarma",
-    ThresholdToReport = "thresholdToReport",
 };
 
-export const appSettings: SettingsFormField[] = [
+const appSettings: SettingsFormField[] = [
     {
         type: "group",
         label: "Sightengine API Settings",
@@ -29,15 +28,8 @@ export const appSettings: SettingsFormField[] = [
     {
         type: "group",
         label: "Detect content in newly created posts",
-        helpText: "Warning: you should be mindful of API usage, and set account age and karma thresholds to keep usage low.",
+        helpText: "Warning: you should be mindful of API usage, and set account age and karma thresholds to keep usage low. Detection will only occur if at least one content type is chosen for proactive detection.",
         fields: [
-            {
-                type: "boolean",
-                label: "Enable automatic check",
-                name: AppSetting.AutoCheckEnabled,
-                helpText: "If enabled, newly created posts will be checked and a report will be made if the image is detected as AI.",
-                defaultValue: false,
-            },
             {
                 type: "boolean",
                 label: "Check after approval",
@@ -73,21 +65,16 @@ export const appSettings: SettingsFormField[] = [
                 helpText: "Only check users with comment karma lower than this. Set to 0 to disable. Choosing zero or a high value will result in higher API usage.",
                 defaultValue: 0,
             },
-            {
-                type: "number",
-                label: "Threshold to report",
-                name: AppSetting.ThresholdToReport,
-                helpText: "App will report the post if the AI content likelihood is greater than this percentage.",
-                defaultValue: 80,
-                onValidate: ({ value }) => {
-                    if (!value) {
-                        return;
-                    }
-                    if (value < 0 || value > 99) {
-                        return "Value must be between 0 and 99.";
-                    }
-                },
-            },
         ],
     },
 ];
+
+export function getAllAppSettings (): SettingsFormField[] {
+    const settings = [...appSettings];
+    for (const Detection of ALL_DETECTIONS) {
+        const detectionInstance = new Detection({});
+        settings.push(detectionInstance.getSettings());
+    }
+
+    return settings;
+}

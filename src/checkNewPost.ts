@@ -5,6 +5,7 @@ import { postIsImage } from "./utility.js";
 import { AppSetting } from "./settings.js";
 import { DateTime } from "luxon";
 import { userIsModerator } from "./moderatorChecks.js";
+import { getModels, getRelevantDetectors } from "./detections/allDetections.js";
 
 function getFilterKeyForPost (postId: string) {
     return `filtered_post:${postId}`;
@@ -72,27 +73,36 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
         console.log(`${source}: User ${user.username} is a moderator. Skipping AI check.`);
     }
 
-    const result = await getSightengineResults(post, context);
+    const detectors = getRelevantDetectors(settings, "menu");
+
+    if (detectors.length === 0) {
+        return;
+    }
+
+    const models = getModels(detectors);
+
+    const result = await getSightengineResults(post, models, context);
     if (result.status === "error") {
         console.error(`PostCreate: Error checking post for AI content: ${result.message}`);
         return;
     }
 
-    if (!result.type?.ai_generated) {
-        console.log(`${source}: Post ${post.id} is not detected as AI content. Skipping report.`);
+    const detectionResults: string[] = [];
+    for (const Detection of detectors) {
+        const detectionInstance = new Detection(settings);
+        const detectionResult = detectionInstance.detectByMenu(result);
+        if (detectionResult) {
+            detectionResults.push(detectionResult);
+        }
+    }
+
+    if (detectionResults.length === 0) {
+        console.log(`${source}: Post ${post.id} did not match any detectors. Skipping report.`);
         return;
     }
 
-    const aiLikelihood = Math.round(result.type.ai_generated * 100);
-
-    const thresholdToReport = settings[AppSetting.ThresholdToReport] as number | undefined;
-    if (thresholdToReport && aiLikelihood < thresholdToReport) {
-        console.log(`${source}: AI content likelihood for ${post.id} (${aiLikelihood}%) is below threshold (${thresholdToReport}%). Skipping report.`);
-        return;
-    }
-
-    console.log(`${source}: Post ${post.id} is detected as AI content with likelihood ${aiLikelihood}%. Reporting post.`);
-    await context.reddit.report(post, { reason: `AI content likelihood: ${aiLikelihood}%` });
+    await context.reddit.report(post, { reason: detectionResults.join(", ") });
+    console.log(`${source}: Post ${post.id} matched: ${detectionResults.join(", ")}. Reported.`);
 }
 
 export async function handlePostCreate (event: PostCreate, context: TriggerContext) {
@@ -102,10 +112,6 @@ export async function handlePostCreate (event: PostCreate, context: TriggerConte
     }
 
     const settings = await context.settings.getAll();
-    if (!settings[AppSetting.AutoCheckEnabled]) {
-        console.log(`PostCreate: Auto check is disabled. Skipping AI check.`);
-        return;
-    }
 
     if (settings[AppSetting.CheckAfterApproval] && event.post.spam) {
         console.log(`PostCreate: Post ${event.post.id} is removed or filtered. Skipping AI check.`);
@@ -132,11 +138,6 @@ export async function handlePostApprovalAction (event: ModAction, context: Trigg
     }
 
     const settings = await context.settings.getAll();
-    if (!settings[AppSetting.AutoCheckEnabled]) {
-        console.log(`PostApprovalAction: Auto check is disabled. Skipping AI check.`);
-        return;
-    }
-
     if (!settings[AppSetting.CheckAfterApproval]) {
         console.log(`PostApprovalAction: Check after approval is disabled. Skipping AI check.`);
         return;

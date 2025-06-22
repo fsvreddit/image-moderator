@@ -1,10 +1,18 @@
-A Dev Platform app for detecting AI content in images.
+A Dev Platform app for detecting AI or other unwanted content in images.
 
-This app uses the Sightengine API to analyse image posts for AI content.
+This app uses the Sightengine API to analyse image posts. Detections supported:
+
+* AI-generated images
+* Deepfake images
+* Minors in images
+* Poor quality (blurry) images
+* Offensive content (Nazi, white supremacist or terrorist imagery)
+* Spammy QR codes or text on an image
+* Drug imagery
 
 To use, you need to sign up to [Sightengine's platform](https://sightengine.com/) and obtain an API user ID and key. You must set the API User in the app settings, and the API key via the subreddit context menu.
 
-For many use cases, Sightengine's free tier will be adequate, permitting 100 AI detections per day up to 400/month. For higher usage needs, Sightengine offer paid plans.
+For many use cases, Sightengine's free tier will be adequate, permitting 500 "operations" per day up to 2,000/month. AI and Deepfake checks use 5 "operations" each, while other checks use 1 each. For higher usage needs, Sightengine offer paid plans.
 
 ## Checking images
 
@@ -26,6 +34,10 @@ If an image is detected as AI, a report like this will be made:
 
 ## Change History
 
+### v1.1
+
+* Add additional detection types
+
 ### v1.0
 
 * Initial Release
@@ -34,4 +46,4 @@ If an image is detected as AI, a report like this will be made:
 
 This app is open source under the BSD 3-Clause licence. The source code can be found [here](https://github.com/fsvreddit/image-moderator).
 
-Interested in detections for things other than AI? Get in touch by messaging /u/fsv! The list of possibilities can be seen in Sightengine's documentation [here](https://sightengine.com/docs/models).
+Interested in detections for things not yet supported? Get in touch by messaging /u/fsv! The list of possibilities can be seen in Sightengine's documentation [here](https://sightengine.com/docs/models). It would be really useful if you could outline the kind of content you're looking to avoid on your subreddit.

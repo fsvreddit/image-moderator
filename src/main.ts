@@ -1,12 +1,12 @@
 import { Devvit } from "@devvit/public-api";
-import { appSettings } from "./settings.js";
+import { getAllAppSettings } from "./settings.js";
 import { setAPIKeyFormHandler } from "./apiKeyManagement.js";
-import { checkPostForAIContent } from "./checkAIContentMenu.js";
-import { handlePostApprovalAction, handlePostCreate } from "./checkAIContentOnNewPost.js";
+import { checkPostFromMenu } from "./checkFromMenu.js";
+import { handlePostApprovalAction, handlePostCreate } from "./checkNewPost.js";
 import { handleModListChanges } from "./moderatorChecks.js";
 import { handleAppInstallOrUpgrade } from "./installActions.js";
 
-Devvit.addSettings(appSettings);
+Devvit.addSettings(getAllAppSettings());
 
 const setAPIKeyForm = Devvit.createForm({
     title: "SightEngine API Key",
@@ -31,9 +31,9 @@ Devvit.addMenuItem({
 
 Devvit.addMenuItem({
     location: "post",
-    label: "Check image for AI Content",
+    label: "Check image using Image Moderator",
     forUserType: "moderator",
-    onPress: checkPostForAIContent,
+    onPress: checkPostFromMenu,
 });
 
 Devvit.addTrigger({

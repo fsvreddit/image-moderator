@@ -4,11 +4,17 @@
   "version": "0.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "vitest --run"
+  },
   "dependencies": {
-    "@devvit/protos": "^0.11.15",
-    "@devvit/public-api": "0.11.15",
-    "@devvit/shared-types": "^0.11.15",
+    "@devvit/protos": "0.11.17",
+    "@devvit/public-api": "0.11.17",
+    "@devvit/shared-types": "0.11.17",
+    "@types/lodash": "^4.17.18",
     "@types/luxon": "^3.6.2",
+    "lodash": "^4.17.21",
     "luxon": "^3.6.1"
   },
   "devDependencies": {
