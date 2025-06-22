@@ -21,14 +21,7 @@ export class DetectDeepfake extends DetectionBase {
             name: ModuleSetting.Threshold,
             helpText: "App will report the post if the deepfake likelihood is greater than this percentage.",
             defaultValue: 80,
-            onValidate: ({ value }) => {
-                if (!value) {
-                    return;
-                }
-                if (value < 0 || value > 99) {
-                    return "Value must be between 0 and 99.";
-                }
-            },
+            onValidate: event => this.validatePercentage(event),
         },
     ];
 

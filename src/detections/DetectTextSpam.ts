@@ -5,7 +5,7 @@ import { SightengineResponse } from "../checkSightEngineAPI.js";
 export class DetectTextSpam extends DetectionBase {
     public name = "TextSpam";
     public friendlyName = "Text Spam Detection";
-    public helpText = "Looks for text that may attempt to drive users externally, such as Telegram or Snapchat handles";
+    public helpText = "Looks for text in images that may attempt to drive users externally, such as Telegram or Snapchat handles";
     public sightengineType = "text-content";
 
     public moduleSettings: SettingsFormField[] = [];

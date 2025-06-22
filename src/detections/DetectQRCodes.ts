@@ -70,7 +70,7 @@ export class DetectQRCodeSpam extends DetectionBase {
         if (results.length > 0) {
             return results.join(", ");
         } else {
-            return "No QR Code spam or social media links detected.";
+            return "No QR Code spam or social media links detected";
         }
     }
 }

@@ -28,7 +28,7 @@ const appSettings: SettingsFormField[] = [
     {
         type: "group",
         label: "Detect content in newly created posts",
-        helpText: "Warning: you should be mindful of API usage, and set account age and karma thresholds to keep usage low.",
+        helpText: "Warning: you should be mindful of API usage, and set account age and karma thresholds to keep usage low. Detection will only occur if at least one content type is chosen for proactive detection.",
         fields: [
             {
                 type: "boolean",

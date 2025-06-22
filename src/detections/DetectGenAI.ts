@@ -40,7 +40,7 @@ export class DetectGenAI extends DetectionBase {
         }
 
         if (aiLikelihood > this.getSetting<number>(ModuleSetting.Threshold, 80)) {
-            return `AI Likelihood: ${aiLikelihood}%.`;
+            return `AI Likelihood: ${aiLikelihood}%`;
         }
     }
 
