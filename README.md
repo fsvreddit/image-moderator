@@ -34,7 +34,7 @@ If an image is detected as AI, a report like this will be made:
 
 ## Change History
 
-### Next
+### v1.1
 
 * Add additional detection types
 
