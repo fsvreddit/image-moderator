@@ -72,7 +72,7 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
         console.log(`${source}: User ${user.username} is a moderator. Skipping AI check.`);
     }
 
-    const result = await getSightengineResults(post, context);
+    const result = await getSightengineResults(post, ["genai"], context);
     if (result.status === "error") {
         console.error(`PostCreate: Error checking post for AI content: ${result.message}`);
         return;

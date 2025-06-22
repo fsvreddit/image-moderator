@@ -11,7 +11,7 @@ export async function checkPostForAIContent (event: MenuItemOnPressEvent, contex
 
     const post = await context.reddit.getPostById(postId);
 
-    const result = await getSightengineResults(post, context);
+    const result = await getSightengineResults(post, ["genai"], context);
     if (result.status === "error") {
         context.ui.showToast(result.message ?? "Error checking post for AI content.");
         return;
