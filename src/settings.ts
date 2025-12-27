@@ -10,7 +10,14 @@ export enum AppSetting {
     MaxAgeInWeeks = "maxAgeInWeeks",
     MaxLinkKarma = "maxLinkKarma",
     MaxCommentKarma = "maxCommentKarma",
+    AutoCheckAction = "autoCheckAction",
+    RemovalMessagePlaceholder = "removalMessagePlaceholder",
 };
+
+export enum AutoCheckActionOption {
+    ReportPost = "reportPost",
+    RemovePost = "removePost",
+}
 
 const appSettings: SettingsFormField[] = [
     {
@@ -64,6 +71,42 @@ const appSettings: SettingsFormField[] = [
                 name: AppSetting.MaxCommentKarma,
                 helpText: "Only check users with comment karma lower than this. Set to 0 to disable. Choosing zero or a high value will result in higher API usage.",
                 defaultValue: 0,
+            },
+            {
+                type: "select",
+                label: "Action to take on detection",
+                name: AppSetting.AutoCheckAction,
+                options: [
+                    { label: "Report Post", value: AutoCheckActionOption.ReportPost },
+                    { label: "Remove Post", value: AutoCheckActionOption.RemovePost },
+                ],
+                multiSelect: false,
+                helpText: "Action to take when AI-generated content is detected in a new post.",
+                defaultValue: [AutoCheckActionOption.ReportPost],
+                onValidate: ({ value }) => {
+                    if (Array.isArray(value) && value.length !== 1) {
+                        return "You must select an action to take on detection.";
+                    }
+                },
+            },
+            {
+                type: "paragraph",
+                label: "Removal message placeholder",
+                name: AppSetting.RemovalMessagePlaceholder,
+                lineHeight: 7,
+                helpText: "Removal message, supports markdown and placeholders {{subreddit}}, {{author}}, {{reasons}}. {{reasons}} will be replaced with bullet points so should be on a line of its own.",
+                defaultValue: "Your post has been removed because it was detected for the following reasons:\n\n{{reasons}}",
+                onValidate: ({ value }) => {
+                    if (!value) {
+                        return;
+                    }
+
+                    const lines = value.split("\n");
+                    const placeholderLines = lines.filter(line => line.includes("{{reasons}}"));
+                    if (placeholderLines.some(line => line.trim() !== "{{reasons}}")) {
+                        return "The {{reasons}} placeholder must be on a line of its own.";
+                    }
+                },
             },
         ],
     },

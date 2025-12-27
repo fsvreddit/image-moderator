@@ -57,14 +57,14 @@ export class DetectDrugs extends DetectionBase {
         return Math.round(sightEngineResponse.recreational_drug.prob * 100);
     }
 
-    public detectProactive (sightEngineResponse: SightengineResponse): string | undefined {
+    public detectProactive (sightEngineResponse: SightengineResponse): string[] | undefined {
         const drugLikelihood = this.getDetectionResult(sightEngineResponse);
         if (drugLikelihood === undefined) {
             return;
         }
 
         if (drugLikelihood > this.getSetting<number>(ModuleSetting.Threshold, 80)) {
-            return `Drug likelihood: ${drugLikelihood}%`;
+            return [`Drug likelihood: ${drugLikelihood}%`];
         }
     }
 

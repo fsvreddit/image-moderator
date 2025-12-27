@@ -28,11 +28,17 @@ You can also set the app up to proactively check new posts, or posts approved ou
 
 Consider setting a suitable account age and karma threshold to restrict this feature to accounts who are more likely to break rules. Posts from moderators will never be checked, and by default content from approved users will not be checked (but this can be changed).
 
-If an image is detected as AI, a report like this will be made:
+You can configure the app to either report the post (the default option) or remove with an optional removal reason.
+
+By default, a report will be made:
 
 ![screenshot](https://github.com/fsvreddit/image-moderator/blob/main/doc_images/screenshot.png?raw=true)
 
 ## Change History
+
+### v1.2
+
+* Added ability to remove posts if a match occurs, with an optional removal message
 
 ### v1.1.2
 

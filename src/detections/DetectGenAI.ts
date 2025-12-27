@@ -33,14 +33,14 @@ export class DetectGenAI extends DetectionBase {
         return Math.round(sightEngineResponse.type.ai_generated * 100);
     }
 
-    public detectProactive (sightEngineResponse: SightengineResponse): string | undefined {
+    public detectProactive (sightEngineResponse: SightengineResponse): string[] | undefined {
         const aiLikelihood = this.getAILikelihood(sightEngineResponse);
         if (aiLikelihood === undefined) {
             return;
         }
 
         if (aiLikelihood > this.getSetting<number>(ModuleSetting.Threshold, 80)) {
-            return `AI Likelihood: ${aiLikelihood}%`;
+            return [`AI Likelihood: ${aiLikelihood}%`];
         }
     }
 

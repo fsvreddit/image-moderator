@@ -107,10 +107,10 @@ export class DetectOffensiveContent extends DetectionBase {
         return results;
     }
 
-    public detectProactive (sightEngineResponse: SightengineResponse): string | undefined {
+    public detectProactive (sightEngineResponse: SightengineResponse): string[] | undefined {
         const results = this.getDetectionResults(sightEngineResponse);
         if (results.length > 0) {
-            return results.join(", ");
+            return results;
         }
     }
 

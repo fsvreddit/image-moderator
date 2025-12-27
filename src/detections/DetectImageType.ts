@@ -64,12 +64,12 @@ export class DetectImageType extends DetectionBase {
         return selectedType[0] as "photo" | "illustration";
     }
 
-    public detectProactive (sightEngineResponse: SightengineResponse): string | undefined {
+    public detectProactive (sightEngineResponse: SightengineResponse): string[] | undefined {
         const detectedType = this.getImageType(sightEngineResponse);
         const reportableType = this.getReportableImageType();
 
         if (detectedType && detectedType !== reportableType) {
-            return `Detected image type: ${detectedType}`;
+            return [`Detected image type: ${detectedType}`];
         }
     }
 

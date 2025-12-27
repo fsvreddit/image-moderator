@@ -12,9 +12,9 @@ export class DetectTextSpam extends DetectionBase {
 
     override defaultEnabledForMenu = false;
 
-    public detectProactive (sightEngineResponse: SightengineResponse): string | undefined {
+    public detectProactive (sightEngineResponse: SightengineResponse): string[] | undefined {
         if (sightEngineResponse.text?.spam && sightEngineResponse.text.spam.length > 0) {
-            return "Text spam detected";
+            return ["Text spam detected"];
         }
     }
 

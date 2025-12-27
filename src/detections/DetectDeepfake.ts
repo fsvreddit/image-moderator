@@ -33,14 +33,14 @@ export class DetectDeepfake extends DetectionBase {
         return Math.round(sightEngineResponse.type.deepfake * 100);
     }
 
-    public detectProactive (sightEngineResponse: SightengineResponse): string | undefined {
+    public detectProactive (sightEngineResponse: SightengineResponse): string[] | undefined {
         const deepfakeLikelihood = this.getDeepfakeLikelihood(sightEngineResponse);
         if (!deepfakeLikelihood) {
             return;
         }
 
         if (deepfakeLikelihood > this.getSetting<number>(ModuleSetting.Threshold, 80)) {
-            return `Deepfake Likelihood: ${deepfakeLikelihood}%`;
+            return [`Deepfake Likelihood: ${deepfakeLikelihood}%`];
         }
     }
 
