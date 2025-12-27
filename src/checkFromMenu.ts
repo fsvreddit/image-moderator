@@ -1,5 +1,5 @@
 import { MenuItemOnPressEvent, Context } from "@devvit/public-api";
-import { isLinkId } from "@devvit/shared-types/tid.js";
+import { isLinkId } from "@devvit/public-api/types/tid.js";
 import { getSightengineResults } from "./checkSightEngineAPI.js";
 import { getModels, getRelevantDetectors } from "./detections/allDetections.js";
 

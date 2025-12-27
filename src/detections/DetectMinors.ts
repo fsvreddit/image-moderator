@@ -31,10 +31,10 @@ export class DetectMinors extends DetectionBase {
         return max(minorLikelihoods.map(likelihood => Math.round(likelihood * 100)));
     }
 
-    public detectProactive (sightEngineResponse: SightengineResponse): string | undefined {
+    public detectProactive (sightEngineResponse: SightengineResponse): string[] | undefined {
         const minorLikelihood = this.getMinorLikelihood(sightEngineResponse);
         if (minorLikelihood && minorLikelihood > this.getSetting(ModuleSetting.MinorThreshold, 80)) {
-            return `Likely minor: ${minorLikelihood}%`;
+            return [`Likely minor: ${minorLikelihood}%`];
         }
     }
 

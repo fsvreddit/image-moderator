@@ -2,7 +2,7 @@ import { ModAction, PostCreate } from "@devvit/protos";
 import { Post, SettingsValues, TriggerContext, User } from "@devvit/public-api";
 import { getSightengineResults } from "./checkSightEngineAPI.js";
 import { postIsImage } from "./utility.js";
-import { AppSetting } from "./settings.js";
+import { AppSetting, AutoCheckActionOption } from "./settings.js";
 import { DateTime } from "luxon";
 import { userIsModerator } from "./moderatorChecks.js";
 import { getModels, getRelevantDetectors } from "./detections/allDetections.js";
@@ -11,7 +11,7 @@ function getFilterKeyForPost (postId: string) {
     return `filtered_post:${postId}`;
 }
 
-async function checkAndReportPost (postId: string, source: "PostCreate" | "PostApprovalAction", settings: SettingsValues, context: TriggerContext) {
+async function checkAndActionPost (postId: string, source: "PostCreate" | "PostApprovalAction", settings: SettingsValues, context: TriggerContext) {
     let post: Post | undefined;
     try {
         post = await context.reddit.getPostById(postId);
@@ -90,9 +90,9 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
     const detectionResults: string[] = [];
     for (const Detection of detectors) {
         const detectionInstance = new Detection(settings);
-        const detectionResult = detectionInstance.detectProactive(result);
-        if (detectionResult) {
-            detectionResults.push(detectionResult);
+        const instanceDetectionResults = detectionInstance.detectProactive(result);
+        if (instanceDetectionResults && instanceDetectionResults.length > 0) {
+            detectionResults.push(...instanceDetectionResults);
         }
     }
 
@@ -101,8 +101,42 @@ async function checkAndReportPost (postId: string, source: "PostCreate" | "PostA
         return;
     }
 
+    const [actionToTake] = settings[AppSetting.AutoCheckAction] as AutoCheckActionOption[] | undefined ?? [AutoCheckActionOption.ReportPost];
+    if (actionToTake === AutoCheckActionOption.ReportPost) {
+        await reportPost(post, detectionResults, context);
+    } else { // Remove post is the only other option
+        await removePost(post, detectionResults, settings[AppSetting.RemovalMessagePlaceholder] as string | undefined, context);
+    }
+}
+
+async function reportPost (post: Post, detectionResults: string[], context: TriggerContext) {
     await context.reddit.report(post, { reason: detectionResults.join(", ") });
-    console.log(`${source}: Post ${post.id} matched: ${detectionResults.join(", ")}. Reported.`);
+    console.log(`Reported post ${post.id} for: ${detectionResults.join(", ")}`);
+}
+
+async function removePost (post: Post, detectionResults: string[], removalMessagePlaceholder: string | undefined, context: TriggerContext) {
+    await post.remove();
+    console.log(`Removed post ${post.id} for: ${detectionResults.join(", ")}`);
+    if (removalMessagePlaceholder) {
+        const subredditName = context.subredditName ?? await context.reddit.getCurrentSubredditName();
+        let removalMessage = removalMessagePlaceholder
+            .replaceAll("{{subreddit}}", subredditName)
+            .replaceAll("{{author}}", post.authorName)
+            .replaceAll("{{reasons}}", detectionResults.map(r => `- ${r}`).join("\n"));
+
+        removalMessage = removalMessage.trim();
+        removalMessage += `\n\n*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/${subredditName}) if you have any questions or concerns.*`;
+
+        const newComment = await post.addComment({
+            text: removalMessage,
+        });
+
+        await Promise.all([
+            newComment.distinguish(true),
+            newComment.lock(),
+        ]);
+        console.log(`Added removal comment to post ${post.id}`);
+    }
 }
 
 export async function handlePostCreate (event: PostCreate, context: TriggerContext) {
@@ -119,7 +153,7 @@ export async function handlePostCreate (event: PostCreate, context: TriggerConte
         return;
     }
 
-    await checkAndReportPost(event.post.id, "PostCreate", settings, context);
+    await checkAndActionPost(event.post.id, "PostCreate", settings, context);
 }
 
 export async function handlePostApprovalAction (event: ModAction, context: TriggerContext) {
@@ -143,6 +177,6 @@ export async function handlePostApprovalAction (event: ModAction, context: Trigg
         return;
     }
 
-    await checkAndReportPost(event.targetPost.id, "PostApprovalAction", settings, context);
+    await checkAndActionPost(event.targetPost.id, "PostApprovalAction", settings, context);
     await context.redis.del(getFilterKeyForPost(event.targetPost.id));
 }

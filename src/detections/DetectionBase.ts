@@ -66,6 +66,6 @@ export abstract class DetectionBase {
         return this.settings[name] as T | undefined ?? defaultValue;
     }
 
-    public abstract detectProactive (sightEngineResponse: SightengineResponse): string | undefined;
+    public abstract detectProactive (sightEngineResponse: SightengineResponse): string[] | undefined;
     public abstract detectByMenu (sightEngineResponse: SightengineResponse): string | undefined;
 }

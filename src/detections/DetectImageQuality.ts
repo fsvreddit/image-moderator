@@ -33,12 +33,11 @@ export class DetectImageQuality extends DetectionBase {
         return Math.round(sightEngineResponse.quality.score * 100);
     }
 
-    public detectProactive (sightEngineResponse: SightengineResponse): string | undefined {
+    public detectProactive (sightEngineResponse: SightengineResponse): string[] | undefined {
         const quality = this.getQualityScore(sightEngineResponse);
         if (quality && quality < this.getSetting(ModuleSetting.QualityThreshold, 50)) {
-            return `Image quality is low (${quality})`;
+            return [`Image quality is low (${quality})`];
         }
-        return undefined;
     }
 
     public detectByMenu (sightEngineResponse: SightengineResponse): string | undefined {

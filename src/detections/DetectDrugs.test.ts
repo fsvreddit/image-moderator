@@ -23,7 +23,7 @@ test("Cannabis detection", () => {
     };
 
     const result = detector.detectProactive(sightEngineResponse);
-    expect(result).toBe("Drug likelihood: 99%");
+    expect(result).toEqual(["Drug likelihood: 99%"]);
 });
 
 test("Cannabis ignored when option is chosen", () => {
@@ -73,5 +73,5 @@ test("Other drugs detected when Allow Cannabis is chosen", () => {
     };
 
     const result = detector.detectProactive(sightEngineResponse);
-    expect(result).toBe("Drug likelihood: 99%");
+    expect(result).toEqual(["Drug likelihood: 99%"]);
 });
