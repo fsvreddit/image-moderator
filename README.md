@@ -36,6 +36,10 @@ By default, a report will be made:
 
 ## Change History
 
+### v1.2.1
+
+* Mitigate against duplicate actions if the Developer Platform is having issues
+
 ### v1.2
 
 * Added ability to remove posts if a match occurs, with an optional removal message

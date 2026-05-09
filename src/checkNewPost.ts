@@ -6,6 +6,7 @@ import { AppSetting, AutoCheckActionOption } from "./settings.js";
 import { DateTime } from "luxon";
 import { userIsModerator } from "./moderatorChecks.js";
 import { getModels, getRelevantDetectors } from "./detections/allDetections.js";
+import { hasTriggerBeenHandled } from "@fsvreddit/fsv-devvit-helpers";
 
 function getFilterKeyForPost (postId: string) {
     return `filtered_post:${postId}`;
@@ -153,6 +154,11 @@ export async function handlePostCreate (event: PostCreate, context: TriggerConte
         return;
     }
 
+    if (await hasTriggerBeenHandled(context.redis, `postCreate:${event.post.id}`)) {
+        console.log(`PostCreate: Trigger already handled for post ${event.post.id}. Skipping duplicate processing.`);
+        return;
+    }
+
     await checkAndActionPost(event.post.id, "PostCreate", settings, context);
 }
 
@@ -163,6 +169,11 @@ export async function handlePostApprovalAction (event: ModAction, context: Trigg
 
     if (!event.targetPost?.id) {
         console.log(`PostApprovalAction: No post ID found in event.`);
+        return;
+    }
+
+    if (await hasTriggerBeenHandled(context.redis, `postApprovalAction:${event.targetPost.id}:${event.actionedAt?.getTime()}`)) {
+        console.log(`PostApprovalAction: Trigger already handled for post ${event.targetPost.id}. Skipping duplicate processing.`);
         return;
     }
 
